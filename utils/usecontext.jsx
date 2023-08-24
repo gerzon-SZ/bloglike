@@ -7,7 +7,6 @@ const AuthContext = createContext()
 export function useAuth() {
     return useContext(AuthContext)
 }
-
 export function AuthProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const handleLogin = async () => {
@@ -45,5 +44,4 @@ export function AuthProvider({ children }) {
         {children}
     </AuthContext.Provider>
 )
-
 }
