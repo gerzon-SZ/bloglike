@@ -4,7 +4,20 @@ import { useSelector } from "react-redux";
 import { selectAllUsers } from "../users/usersSlice";
 import { useNavigate } from "react-router-dom";
 import { useAddNewPostMutation } from "./postsSlice";
+import styled from '@emotion/styled';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
 
+import BasicTextFields from "../../components/input/BasicTextFields";
+
+const StyledForm = styled.form`
+   display: flex;
+   row-gap: 1rem;
+`
 const AddPostForm = () => {
     const [addNewPost, { isLoading }] = useAddNewPostMutation()
 
@@ -27,7 +40,6 @@ const AddPostForm = () => {
         if (canSave) {
             try {
                 await addNewPost({ title, body: content, userId }).unwrap()
-
                 setTitle('')
                 setContent('')
                 setUserId('')
@@ -39,40 +51,49 @@ const AddPostForm = () => {
     }
 
     const usersOptions = users.map(user => (
-        <option key={user.id} value={user.id}>
-            {user.name}
-        </option>
+        <MenuItem key={user.id} value={user.id}> {user.name}</MenuItem>
     ))
 
     return (
         <section>
             <h2>Add a New Post</h2>
             <form>
-                <label htmlFor="postTitle">Post Title:</label>
-                <input
-                    type="text"
-                    id="postTitle"
-                    name="postTitle"
-                    value={title}
-                    onChange={onTitleChanged}
+                <StyledForm>
+                <TextField id="outlined-basic" label="Post Title" variant="outlined"
+                 value={title}
+                 onChange={onTitleChanged}
                 />
-                <label htmlFor="postAuthor">Author:</label>
-                <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
-                    <option value=""></option>
-                    {usersOptions}
-                </select>
-                <label htmlFor="postContent">Content:</label>
-                <textarea
+                <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Author</InputLabel>
+                    <Select
+                        id="demo-simple-select"
+                        labelId="demo-simple-select-label"
+                        label="Author"
+                        value={userId}
+                        onChange={onAuthorChanged}
+                        >
+                            {usersOptions}
+                    
+                    </Select>
+                </FormControl>
+
+                <TextField label="Post Content" variant="outlined"
                     id="postContent"
                     name="postContent"
                     value={content}
                     onChange={onContentChanged}
+                    multiline
+                    rows = {8}
+                    maxRows = {8}
                 />
-                <button
-                    type="button"
-                    onClick={onSavePostClicked}
-                    disabled={!canSave}
-                >Save Post</button>
+                <Button 
+                variant="contained"
+                disabled={!canSave}
+                onClick={onSavePostClicked}
+
+                >Save Post</Button>
+             
+                </StyledForm>
             </form>
         </section>
     )

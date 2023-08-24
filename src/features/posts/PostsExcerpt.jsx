@@ -18,7 +18,6 @@ const PostsExcerpt = ({ postId }) => {
                 <PostAuthor userId={post.userId} />
                 <TimeAgo timestamp={post.date} />
             </p>
-        
         </article>
     )
 }

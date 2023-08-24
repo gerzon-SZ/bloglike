@@ -110,10 +110,10 @@ nav a:hover, nav a:focus {
   text-decoration: underline;
 }
 
-main {
+/* main {
   max-width: 500px;
   margin: auto;
-}
+} */
 
 section {
   margin-top: 1em;
