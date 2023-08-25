@@ -1,10 +1,21 @@
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { selectPostById } from './postsSlice'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-
-import { selectAllUsers } from "../users/usersSlice";
+import { useGetPostsQuery } from './postsSlice';
 import { useUpdatePostMutation, useDeletePostMutation } from "./postsSlice";
+import { useGetUsersQuery } from '../users/usersSlice';
+
+import styled from '@emotion/styled';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button'
+import MenuItem from '@mui/material/MenuItem';
+const StyledForm = styled.form`
+   display: flex;
+   row-gap: 1rem;
+`
+
 
 const EditPostForm = () => {
     const { postId } = useParams()
@@ -13,12 +24,29 @@ const EditPostForm = () => {
     const [updatePost, { isLoading }] = useUpdatePostMutation()
     const [deletePost] = useDeletePostMutation()
 
-    const post = useSelector((state) => selectPostById(state, Number(postId)))
-    const users = useSelector(selectAllUsers)
+    const { post, isLoading: isLoadingPosts, isSuccess } = useGetPostsQuery('getPosts', {
+        selectFromResult: ({ data, isLoading, isSuccess }) => ({
+            post: data?.entities[postId],
+            isLoading,
+            isSuccess
+        }),
+    })
 
-    const [title, setTitle] = useState(post?.title)
-    const [content, setContent] = useState(post?.body)
-    const [userId, setUserId] = useState(post?.userId)
+    const { data: users, isSuccess: isSuccessUsers } = useGetUsersQuery('getUsers')
+
+    const [title, setTitle] = useState('')
+    const [content, setContent] = useState('')
+    const [userId, setUserId] = useState('')
+
+    useEffect(() => {
+        if (isSuccess) {
+            setTitle(post.title)
+            setContent(post.body)
+            setUserId(post.userId)
+        }
+    }, [isSuccess, post?.title, post?.body, post?.userId])
+
+    if (isLoadingPosts) return <p>Loading...</p>
 
     if (!post) {
         return (
@@ -37,7 +65,7 @@ const EditPostForm = () => {
     const onSavePostClicked = async () => {
         if (canSave) {
             try {
-                await updatePost({ id: post.id, title, body: content, userId }).unwrap()
+                await updatePost({ id: post?.id, title, body: content, userId }).unwrap()
 
                 setTitle('')
                 setContent('')
@@ -49,16 +77,19 @@ const EditPostForm = () => {
         }
     }
 
-    const usersOptions = users.map(user => (
-        <option
-            key={user.id}
-            value={user.id}
-        >{user.name}</option>
-    ))
+    let usersOptions
+    if (isSuccessUsers) {
+        usersOptions = users.ids.map(id => (
+            <MenuItem
+                key={id}
+                value={id}
+            >{users.entities[id].name}</MenuItem>
+        ))
+    }
 
     const onDeletePostClicked = async () => {
         try {
-            await deletePost({ id: post.id }).unwrap()
+            await deletePost({ id: post?.id }).unwrap()
 
             setTitle('')
             setContent('')
@@ -72,41 +103,55 @@ const EditPostForm = () => {
     return (
         <section>
             <h2>Edit Post</h2>
-            <form>
-                <label htmlFor="postTitle">Post Title:</label>
-                <input
-                    type="text"
-                    id="postTitle"
-                    name="postTitle"
+            <StyledForm>
+                <TextField id="outlined-basic" label="Post Title" variant="outlined"
                     value={title}
                     onChange={onTitleChanged}
+                    type="text"
+                    name="postTitle"
                 />
-                <label htmlFor="postAuthor">Author:</label>
-                <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
+                
+                <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Author</InputLabel>
+                <Select
+                    id="demo-simple-select"
+                    labelId="demo-simple-select-label"
+                    label="Author"
+                    value={userId}
+                    onChange={onAuthorChanged}
+                    >
                     <option value=""></option>
                     {usersOptions}
-                </select>
-                <label htmlFor="postContent">Content:</label>
-                <textarea
-                    id="postContent"
-                    name="postContent"
-                    value={content}
-                    onChange={onContentChanged}
-                />
-                <button
-                    type="button"
-                    onClick={onSavePostClicked}
-                    disabled={!canSave}
-                >
-                    Save Post
-                </button>
-                <button className="deleteButton"
-                    type="button"
-                    onClick={onDeletePostClicked}
-                >
-                    Delete Post
-                </button>
-            </form>
+                
+                </Select>
+            </FormControl>
+            
+            <TextField label="Post Content" variant="outlined"
+                id="postContent"
+                name="postContent"
+                value={content}
+                onChange={onContentChanged}
+                multiline
+                rows = {8}
+            />
+                <Button 
+            variant="contained"
+            disabled={!canSave}
+            onClick={onSavePostClicked}
+
+            >Save Post</Button>
+
+           <Button 
+             style={{
+                backgroundColor: "#d87093",
+            }}
+            variant="contained"
+            disabled={!canSave}
+            onClick={onDeletePostClicked}
+
+            >Delete Post</Button>
+          
+            </StyledForm>
         </section>
     )
 }

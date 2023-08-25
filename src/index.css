@@ -120,7 +120,7 @@ section {
 }
 
 article {
-  margin: 0.5em;
+  margin: 1em;
   border: 1px solid #000;
   border-radius: 10px;
   padding: 1em;
@@ -178,6 +178,7 @@ textarea {
 }
 
 .deleteButton {
-  background-color: palevioletred;
+  background-color: #d87093;
   color: white;
+
 }
