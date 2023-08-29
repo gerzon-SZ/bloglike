@@ -111,8 +111,9 @@ nav a:hover, nav a:focus {
 }
 
 /* main {
-  max-width: 500px;
+  width: 1200px;
   margin: auto;
+  height: 100vh;
 } */
 
 section {
