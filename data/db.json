@@ -283,12 +283,6 @@
     },
     {
       "userId": 2,
-      "id": 13,
-      "title": "dolorum ut in voluptas mollitia et saepe quo animi",
-      "body": "aut dicta possimus sint mollitia voluptas commodi quo doloremque\niste corrupti reiciendis voluptatem eius rerum\nsit cumque quod eligendi laborum minima\nperferendis recusandae assumenda consectetur porro architecto ipsum ipsam"
-    },
-    {
-      "userId": 2,
       "id": 14,
       "title": "voluptatem eligendi optio",
       "body": "fuga et accusamus dolorum perferendis illo voluptas\nnon doloremque neque facere\nad qui dolorum molestiae beatae\nsed aut voluptas totam sit illum"
@@ -880,6 +874,36 @@
       },
       "imageUrl": "https://source.unsplash.com/random?wallpapers",
       "id": 106
+    },
+    {
+      "title": "dfaf",
+      "body": "test",
+      "userId": 1,
+      "date": "2023-08-30T07:36:32.959Z",
+      "reactions": {
+        "thumbsUp": 0,
+        "wow": 0,
+        "heart": 0,
+        "rocket": 0,
+        "coffee": 0
+      },
+      "image": "https://source.unsplash.com/random?wallpapers",
+      "id": 107
+    },
+    {
+      "title": "Post Title",
+      "body": "Post content test",
+      "userId": 4,
+      "date": "2023-08-30T07:41:34.194Z",
+      "reactions": {
+        "thumbsUp": 0,
+        "wow": 0,
+        "heart": 0,
+        "rocket": 0,
+        "coffee": 0
+      },
+      "image": "https://source.unsplash.com/random?wallpapers",
+      "id": 108
     }
   ]
 }
