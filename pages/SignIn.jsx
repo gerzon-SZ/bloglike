@@ -13,6 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { useLoginMutation } from '../src/features/users/usersSlice';
+import { useForm, Controller } from 'react-hook-form';
+
+import { useNavigate } from 'react-router-dom';
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -31,14 +36,22 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const [login, { isLoading, data, error }] = useLoginMutation();
+  const { control, handleSubmit } = useForm();
+  const onSubmit = (data) => {
+    // Access form data here
+    const result = login(data);
+    
   };
+
+const navigate = useNavigate();
+  // Navigate to dashboard page if login successful
+  if (data) {
+    return navigate("/");
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -58,31 +71,54 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Controller
               name="email"
-              autoComplete="email"
-              autoFocus
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                />
+              )}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
+            <Controller
               name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+              )}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+               {error && (
+                  <p style={{ color: 'red' }}>
+                    {error.status === 400
+                      ? error.data?.message
+                      : 'Cannot connect to server!'}
+                  </p>
+                )}
             <Button
               type="submit"
               fullWidth
@@ -103,7 +139,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
-          </Box>
+          </form>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>

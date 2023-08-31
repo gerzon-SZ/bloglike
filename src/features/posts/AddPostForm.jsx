@@ -10,7 +10,8 @@ import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { useForm, Controller } from 'react-hook-form';
-
+import { useSelector } from 'react-redux';
+import {selectUser} from '../users/usersSlice';
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -18,17 +19,27 @@ const StyledForm = styled.form`
 `;
 
 const AddPostForm = () => {
+  const user = useSelector(selectUser);
+  
   const [addNewPost, { isLoading }] = useAddNewPostMutation();
   const navigate = useNavigate();
+  console.log(user, "user add m");
+  if (!user ) {
+    navigate('/signin');
+  }
   const { control, handleSubmit, formState } = useForm();
   const { data: users, isSuccess } = useGetUsersQuery('getUsers');
+  if (isSuccess) {
+    console.log(users);
+  }
+
 
   const canSave = !formState.isSubmitting && isSuccess;
 
   const onSubmit = async (data) => {
     if (canSave) {
       try {
-        await addNewPost(data).unwrap();
+        const results = await addNewPost(data).unwrap();
         navigate('/');
       } catch (err) {
         console.error('Failed to save the post', err);
@@ -77,7 +88,7 @@ const AddPostForm = () => {
           )}
         />
         <Controller
-          name="content"
+          name="body"
           control={control}
           defaultValue=""
           render={({ field }) => (

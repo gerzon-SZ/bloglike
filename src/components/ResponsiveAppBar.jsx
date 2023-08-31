@@ -13,13 +13,30 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link as ReactLink } from 'react-router-dom'
+
+import {useDispatch, useSelector} from 'react-redux';
+import {logout, selectUser} from '../features/users/usersSlice';
+import { useNavigate } from 'react-router-dom';
+
 const pages = ['Home', 'Post', 'Users'];
 const pageLinks = [{'Home':'/','Post':'post','Users':'user'}];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
+  const user = useSelector(selectUser);
+  console.log(user, "user2");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // const { data, isLoading, error } = useGetUsersQuery();
+
+  // // Navigate to login page if is not authenticated
+  if(!user) { // || error?.originalStatus === 401
+    navigate('/signin');
+  }
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
 
   const handleOpenNavMenu = (event) => {
     
@@ -37,6 +54,9 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    dispatch(logout())
+  }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -96,6 +116,7 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
+          {user && <p>Welcome {user.firstname}</p>}
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -152,7 +173,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={setting==='Logout' ?  handleLogout  : handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

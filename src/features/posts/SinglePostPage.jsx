@@ -8,13 +8,14 @@ import { useGetPostsQuery } from "./postsSlice";
 const SinglePostPage = () => {
     const { postId } = useParams()
 
-    const { post, isLoading } = useGetPostsQuery('getPosts', {
+    const { post, isLoading, isSuccess } = useGetPostsQuery('getPosts', {
         selectFromResult: ({ data, isLoading }) => ({
             post: data?.entities[postId],
             isLoading
         }),
     })
-
+    if (isSuccess) console.log(post)
+    
     if (isLoading) return <p>Loading...</p>
 
     if (!post) {

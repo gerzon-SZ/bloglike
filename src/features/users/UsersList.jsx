@@ -21,8 +21,10 @@ let data
     if (isLoading) {
         
     } else if (isSuccess) {
+        console.log(users, 'users')
+        const sampleValue = Object.values(users.entities)[0];
         data = {
-            columns:Object.keys(users.entities[1]).map((key) => ({
+            columns:Object.keys(sampleValue).map((key) => ({
                 field: key,
                 headerName: key,
                 width: 150,
@@ -36,19 +38,16 @@ let data
 
   useEffect(() => {
       if (isSuccess) {
+        console.log(users, 'users')
+        const sampleValue = Object.values(users.entities)[0];
         data = {
-            columns:Object.keys(users.entities[1]).map((key) => ({
+            columns:Object.keys(sampleValue).map((key) => ({
                 field: key,
                 headerName: key,
                 width: 150,
             })),
             rows: Object.values(users.entities)
         }
-                console.log(data)
-        console.log(users)
-     setContent(
-     
-      )
       }
     }, [isSuccess])
 useEffect(() => {

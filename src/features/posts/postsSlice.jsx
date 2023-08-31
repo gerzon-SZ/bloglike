@@ -1,6 +1,7 @@
 import { createEntityAdapter } from "@reduxjs/toolkit";
 import { sub } from 'date-fns';
 import { apiSlice } from "../api/apiSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
 const postsAdapter = createEntityAdapter({
     sortComparer: (a, b) => b.date.localeCompare(a.date)
@@ -11,7 +12,7 @@ const initialState = postsAdapter.getInitialState()
 export const extendedApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getPosts: builder.query({
-            query: () => '/posts',
+            query: () => '/api/v1/post',
             transformResponse: responseData => {
                 let min = 1;
                 const loadedPosts = responseData.map(post => {
@@ -23,7 +24,8 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                         heart: 0,
                         rocket: 0,
                         coffee: 0
-                    }
+                    },
+                    post.id = post._id
                     return post;
                 });
                 return postsAdapter.setAll(initialState, loadedPosts)
@@ -34,7 +36,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             ]
         }),
         getPostsByUserId: builder.query({
-            query: id => `/posts/?userId=${id}`,
+            query: id => `/api/v1/post?userId=${id}`,
             transformResponse: responseData => {
                 let min = 1;
                 const loadedPosts = responseData.map(post => {
@@ -56,12 +58,10 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         }),
         addNewPost: builder.mutation({
             query: initialPost => ({
-                url: '/posts',
+                url: '/api/v1/post',
                 method: 'POST',
                 body: {
                     ...initialPost,
-                    userId: Number(initialPost.userId),
-                    date: new Date().toISOString(),
                     reactions: {
                         thumbsUp: 0,
                         wow: 0,
@@ -69,6 +69,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                         rocket: 0,
                         coffee: 0
                     },
+                    id: "P".concat(nanoid()),
                     image :'https://source.unsplash.com/random?wallpapers'
                 }
             }),
@@ -78,7 +79,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         }),
         updatePost: builder.mutation({
             query: initialPost => ({
-                url: `/posts/${initialPost.id}`,
+                url: `/api/v1/post/${initialPost.id}`,
                 method: 'PUT',
                 body: {
                     ...initialPost,
@@ -91,7 +92,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         }),
         deletePost: builder.mutation({
             query: ({ id }) => ({
-                url: `/posts/${id}`,
+                url: `/api/v1/post/${id}`,
                 method: 'DELETE',
                 body: { id }
             }),
@@ -103,17 +104,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             query: ({ postId, reactions }) => ({
                 url: `posts/${postId}`,
                 method: 'PATCH',
-                // In a real app, we'd probably need to base this on user ID somehow
-                // so that a user can't do the same reaction more than once
-                body: { reactions }
+                 body: { reactions }
             }),
             async onQueryStarted({ postId, reactions }, { dispatch, queryFulfilled }) {
-                // `updateQueryData` requires the endpoint name and cache key arguments,
-                // so it knows which piece of cache state to update
                 const patchResult = dispatch(
-                    // updateQueryData takes three arguments: the name of the endpoint to update, the same cache key value used to identify the specific cached data, and a callback that updates the cached data.
-                    extendedApiSlice.util.updateQueryData('getPosts', 'getPosts', draft => {
-                        // The `draft` is Immer-wrapped and can be "mutated" like in createSlice
+                     extendedApiSlice.util.updateQueryData('getPosts', 'getPosts', draft => {
                         const post = draft.entities[postId]
                         if (post) post.reactions = reactions
                     })

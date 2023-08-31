@@ -15,15 +15,18 @@ const PostsList = () => {
     let content;
     if (isLoading) {
         content = <p>"Loading..."</p>;
-    } else if (isSuccess) {
+    } 
+    if (isSuccess) {
+        console.log(posts);
         content = posts.ids.map(postId => {
             return (
                 <Grid item xs={12} md={6} key={postId}>
                     <FeaturedPost key={postId} postId={postId} />
                 </Grid>
-            ) 
+        )
     })
-    } else if (isError) {
+    }
+    if (isError) {
         content = <p>{error}</p>;
     }
     return (

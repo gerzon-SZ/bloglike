@@ -26,7 +26,7 @@ const FeaturedPost = ({ postId }) => {
                 <PostAuthor userId={post.userId} />
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
-                <TimeAgo timestamp={post.date} />
+                <TimeAgo timestamp={post.createdAt} />
             </Typography>
             <Typography variant="subtitle1" paragraph>
                 {post.body.substring(0, 75)}...

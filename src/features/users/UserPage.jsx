@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { useGetPostsByUserIdQuery } from '../posts/postsSlice'
 import { useGetUsersQuery } from './usersSlice'
+import { DataGrid } from '@mui/x-data-grid';
 
 const UserPage = () => {
     const { userId } = useParams()
@@ -29,20 +30,40 @@ const UserPage = () => {
     } = useGetPostsByUserIdQuery(userId);
 
     let content;
+    let data
     if (isLoading || isLoadingUser) {
         content = <p>Loading...</p>
     } else if (isSuccess && isSuccessUser) {
+      
         const { ids, entities } = postsForUser
+        data = {
+            columns:Object.keys(entities[ids[0]]).map((key) => ({
+                field: key,
+                headerName: key,
+                width: 150,
+            })),
+            rows: Object.values(entities)
+        }
+        console.log(postsForUser, " postsForUser")
         content = (
             <section>
                 <h2>{user?.name}</h2>
-                <ol>
+                
+                <DataGrid
+                    rows={data.rows}
+                    columns={data.columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+            
+                    />
+                {/* <ol>
                     {ids.map(id => (
                         <li key={id}>
-                            <Link to={`/post/${id}`}>{entities[id].title}</Link>
+                            <Link to={`/post/${entities[id]._id}`}>{entities[id].title}</Link>
                         </li>
                     ))}
-                </ol>
+                </ol> */}
             </section>
         )
     } else if (isError || isErrorUser) {

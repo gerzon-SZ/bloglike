@@ -13,6 +13,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { useLoginMutation } from '../src/features/users/usersSlice';
+
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -39,6 +42,15 @@ export default function SignInSide() {
       password: data.get('password'),
     });
   };
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const [login, { isLoading, data, error }] = useLoginMutation();
+
+  // Navigate to dashboard page if login successful
+  if (data) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -84,6 +96,8 @@ export default function SignInSide() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={(event) => setEmail(event.target.value)}
+                
               />
               <TextField
                 margin="normal"
@@ -94,6 +108,7 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(event) => setPassword(event.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -104,6 +119,7 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={() => login({ email, password })} disabled={isLoading}
               >
                 Sign In
               </Button>
