@@ -35,7 +35,7 @@ const style = {
 };
 
 export default function BasicModal({entities, selectedRow, text, isDisabled, rowDataHandler}) {
-
+    console.log(entities, 'entities')
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -184,9 +184,20 @@ export default function BasicModal({entities, selectedRow, text, isDisabled, row
                 )}
               />
               </Grid>
-             <Grid item xs={12}>
-             
-              </Grid>
+              <Grid item xs={12}>
+                {/* <Controller
+                    name="admin" // Replace with the appropriate field name
+                    control={control}
+                    defaultValue={selectedRow ? entities[selectedRow].admin : true} // Set the default value as needed
+                    render={({ field }) => (
+                    <FormControlLabel
+                        control={<Checkbox {...field} color="primary" />}
+                        label="Admin"
+                    />
+                    )}
+                /> */}
+                </Grid>
+
             </Grid>
             <Button
               type="submit"

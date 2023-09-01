@@ -19,12 +19,13 @@ const StyledForm = styled.form`
 `;
 
 const AddPostForm = () => {
-  const user = useSelector(selectUser);
-  
+  const userState = useSelector(selectUser);
+  sessionStorage.setItem('user', JSON.stringify(userState));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const [addNewPost, { isLoading }] = useAddNewPostMutation();
   const navigate = useNavigate();
   console.log(user, "user add m");
-  if (!user ) {
+  if (!user) {
     navigate('/signin');
   }
   const { control, handleSubmit, formState } = useForm();

@@ -23,17 +23,10 @@ const pageLinks = [{'Home':'/','Post':'post','Users':'user'}];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
-  const user = useSelector(selectUser);
-  console.log(user, "user2");
+  const userState = useSelector(selectUser);
+  sessionStorage.setItem('user', JSON.stringify(userState));
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // const { data, isLoading, error } = useGetUsersQuery();
-
-  // // Navigate to login page if is not authenticated
-  if(!user) { // || error?.originalStatus === 401
-    navigate('/signin');
-  }
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -57,6 +50,51 @@ function ResponsiveAppBar() {
   const handleLogout = () => {
     dispatch(logout())
   }
+  // const { data, isLoading, error } = useGetUsersQuery();
+
+  // // Navigate to login page if is not authenticated
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  console.log(user, 'user')
+  if(!user) { // || error?.originalStatus === 401
+    navigate('/signin');
+  }
+  console.log(user?.admin, 'user', user)
+  const menuItems = pages.map((page) => {
+    console.log(page, 'page')
+    if (page === 'Users' && !user?.admin) {
+      console.log('user.admin is false')
+      // Skip rendering the 'users' menu item when user.admin is false
+      return null;
+    }
+    return (
+      <MenuItem key={page} onClick={handleCloseNavMenu}>
+        <Typography textAlign="center">{page}</Typography>
+      </MenuItem>
+    );
+  });
+
+  const buttons = pages.map((page) => {
+    console.log(page, 'page')
+    if (page === 'Users' && !user?.admin) {
+      console.log('user.admin is false')
+      // Skip rendering the 'users' menu item when user.admin is false
+      return null;
+    }
+    return (
+      <Button
+        component = {ReactLink}
+        key={page}
+        onClick={handleCloseNavMenu}
+        to={pageLinks[0][page]}
+        sx={{ my: 2, color: 'white', display: 'block' }}
+      >
+        {page}
+      </Button>
+    )
+  });
+  
+  
+ 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -109,11 +147,7 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {menuItems}
             </Menu>
           </Box>
           {user && <p>Welcome {user.firstname}</p>}
@@ -137,17 +171,7 @@ function ResponsiveAppBar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                component = {ReactLink}
-                key={page}
-                onClick={handleCloseNavMenu}
-                to={pageLinks[0][page]}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+            {buttons}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
