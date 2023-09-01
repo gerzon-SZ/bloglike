@@ -58,11 +58,11 @@ function ResponsiveAppBar() {
   if(!user) { // || error?.originalStatus === 401
     navigate('/signin');
   }
-  console.log(user?.admin, 'user', user)
+
   const menuItems = pages.map((page) => {
     console.log(page, 'page')
     if (page === 'Users' && !user?.admin) {
-      console.log('user.admin is false')
+      
       // Skip rendering the 'users' menu item when user.admin is false
       return null;
     }
