@@ -3,6 +3,7 @@ import { useGetPostsByUserIdQuery } from '../posts/postsSlice'
 import { useGetUsersQuery } from './usersSlice'
 import { DataGrid } from '@mui/x-data-grid';
 
+
 const UserPage = () => {
     const { userId } = useParams()
 
@@ -50,13 +51,12 @@ const UserPage = () => {
                 <h2>{user?.name}</h2>
                 
                 <DataGrid
-                    rows={data.rows}
-                    columns={data.columns}
+                    data
                     pageSize={5}
                     rowsPerPageOptions={[5]}
-                    checkboxSelection
-            
+
                     />
+              
                 {/* <ol>
                     {ids.map(id => (
                         <li key={id}>

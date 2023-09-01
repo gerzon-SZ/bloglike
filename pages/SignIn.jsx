@@ -41,9 +41,11 @@ export default function SignIn() {
 
   const [login, { isLoading, data, error }] = useLoginMutation();
   const { control, handleSubmit } = useForm();
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
     // Access form data here
-    const result = login(data);
+    const result = login(formData);
+
+
     
   };
 
@@ -134,7 +136,7 @@ const navigate = useNavigate();
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

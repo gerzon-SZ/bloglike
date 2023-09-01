@@ -1,13 +1,28 @@
 
 import { Link } from 'react-router-dom'
-import {useState, useEffect} from 'react'
-import { useGetUsersQuery } from './usersSlice'
+import React, {useState, useEffect} from 'react'
+import { useGetUsersQuery, useDeleteUserMutation } from './usersSlice'
 import { DataGrid } from '@mui/x-data-grid';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import BasicModal from '../../components/BasicModal'
+import styled from '@emotion/styled';
 
-export default function UsersList() {
-    
-const [selectedRows, setSelectedRows] = useState([]);
+
+export default function UsersList() { 
+const [isDisabled, setIsDisabled] = useState(true);
+const [selectedRow, setSelectedRow] = useState(null);
 const [content, setContent] = useState(<p>Loading...</p>);
+
+React.useEffect(() => {
+    if (selectedRow === null) {
+        setIsDisabled(true);
+    } else {
+        setIsDisabled(false);
+    }
+    console.log(isDisabled, 'isDisabled')
+}, [selectedRow])
+
 let data
     const {
         data: users,
@@ -16,8 +31,19 @@ let data
         isError,
         error
     } = useGetUsersQuery('getUsers')
+    const [deleteUser, { data: deleteData, isLoading: deleteIsLoading, isSuccess: deleteIsSuccess, isError: deleteIsError, error: deleteError }] = useDeleteUserMutation()
+    const handleDelete = async () => {
+        console.log(selectedRow, 'selectedRow')
+        const result = await deleteUser({id : selectedRow}).unwrap();
+        if (result.success) {
+            rowDataHandler()
+            return navigate("/user");
+        }
+    }
 
 
+
+    
     if (isLoading) {
         
     } else if (isSuccess) {
@@ -34,7 +60,9 @@ let data
     } else if (isError) {
         
     }
-
+    const rowDataHandler = () => {
+        setSelectedRow(null)
+    }
 
   useEffect(() => {
       if (isSuccess) {
@@ -57,22 +85,31 @@ useEffect(() => {
         <>
         {isSuccess && (<div style={{ height: 400, width: '100%' }}>
         <DataGrid
-
-            rows={data.rows}
-            columns={data.columns}
+            {...data}
             pageSize={5}
             rowsPerPageOptions={[5]}
-            checkboxSelection
-            onSelectionModelChange={(newSelection) => {
-                console.log(newSelection)
-                setSelectedRows(newSelection.selectionModel);
-            }}
-            selectionModel={selectedRows}
+            onRowClick={(params, event) => {
+                if (!event.ignore) {
+                    setSelectedRow(params.row.id);
+                }
+              }
+            }
         />
+        <Stack spacing={2} direction="row" padding="10px">
+            {/* <Button variant="contained">Contained</Button> */}
+            <Button variant="text">ID selected : {selectedRow} </Button>
+            
+        </Stack>
+            <Stack spacing={2} direction="row" padding="10px">
+       
+               <BasicModal text = {"ADD USER"} />
+               <BasicModal entities={users.entities} selectedRow={selectedRow }  text = {"EDIT"}  isDisabled = {isDisabled} rowDataHandler={rowDataHandler}/>
+                <Button variant="outlined" disabled={isDisabled} onClick={handleDelete}>Delete</Button>
+        </Stack>
     </div> )}
 
             {isLoading && (<p>Loading...</p>)}
-    
+            
 
         </>
     )

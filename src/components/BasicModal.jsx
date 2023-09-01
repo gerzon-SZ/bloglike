@@ -1,55 +1,74 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useCreateUserMutation } from '../src/features/users/usersSlice'
+import { useCreateUserMutation,
+        useUpdateUserMutation
+         } from '../features/users/usersSlice'
+
 import { useForm, Controller } from 'react-hook-form';
 
 import { useNavigate } from 'react-router-dom';
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
-export default function SignUp() {
+export default function BasicModal({entities, selectedRow, text, isDisabled, rowDataHandler}) {
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [createUser, { data, isLoading, isSuccess, isError, error }] = useCreateUserMutation()
+  const [updateUser, { data: updateData, isLoading: updateIsLoading, isSuccess: updateIsSuccess, isError: updateIsError, error: updateError }] = useUpdateUserMutation()
+
+
+
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     // Access form data here
-    console.log(data, "data")
-    const result = await createUser(data).unwrap();
-    if (result.success) {
-      return navigate("/signin");
+    data.id = selectedRow
+    console.log(data, 'data', selectedRow, 'selectedRow')
+        if (text==="EDIT") {
+            const result = await updateUser(data).unwrap();
+            return navigate("/user");
+        } else {
+            const result = await createUser(data).unwrap();
+            return navigate("/user");   
+        }
     }
-  };
- 
-
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
+    <div>
+      <Button onClick={handleOpen} variant='outlined'disabled={isDisabled}>{text}</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+    
+      <Container component="main" maxWidth="xs" sx = {style}>
         <CssBaseline />
         <Box
           sx={{
@@ -63,7 +82,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            {text==="EDIT" ? "Update User" : "Add User"}
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -71,7 +90,8 @@ export default function SignUp() {
               <Controller
               name="firstName"
               control={control}
-              defaultValue=""
+              defaultValue={selectedRow ? entities[selectedRow].firstName : ""}
+              rules={{ required: 'First Name is required' }}
                   render={({ field }) => (
                     <TextField
                     {...field}
@@ -91,7 +111,8 @@ export default function SignUp() {
               <Controller
               name="lastName"
               control={control}
-              defaultValue=""
+              defaultValue= {selectedRow ? entities[selectedRow].lastName : ""}
+              rules={{ required: 'Last Name is required' }}
                   render={({ field }) => (
                 <TextField
                 {...field}
@@ -109,7 +130,8 @@ export default function SignUp() {
               <Controller
               name="username"
               control={control}
-              defaultValue=""
+              defaultValue= {selectedRow ? entities[selectedRow].username : ""}
+              rules={{ required: 'Last Name is required' }}
                 render={({ field }) => (
                 <TextField
                 {...field}
@@ -127,7 +149,9 @@ export default function SignUp() {
               <Controller
               name="email"
               control={control}
-              defaultValue=""
+              defaultValue= {selectedRow ? entities[selectedRow].email : ""}
+              rules={{ required: 'Last Name is required' }}
+              
                 render={({ field }) => (
                 <TextField
                 {...field}
@@ -144,27 +168,24 @@ export default function SignUp() {
               <Grid item xs={12}>
               <Controller
               name="password"
+              type="hidden"
               control={control}
-              defaultValue=""
+              defaultValue="Secret123!"
                 render={({ field }) => (
                 <TextField
                 {...field}
                   required
                   fullWidth
                   name="password"
-                  label="Password"
-                  type="password"
+                  type="hidden"
                   id="password"
                   autoComplete="new-password"
                 />
                 )}
               />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
+             <Grid item xs={12}>
+             
               </Grid>
             </Grid>
             <Button
@@ -173,19 +194,14 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+             {text==="EDIT" ? "Save" : "Add"}
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/signin" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+          
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        
       </Container>
-    </ThemeProvider>
+      </Modal>
+    </div>
   );
 }
