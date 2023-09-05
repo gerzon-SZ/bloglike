@@ -9,10 +9,8 @@ const Layout = () => {
     return (
         <>
             <CssBaseline />
-            <Container maxWidth="lg" sx={{ width:"100vw" }}>
+            <Container maxWidth="xl" sx={{ width:"100vw", display:"flex", flexDirection:"column", rowGap:"10px"}}>
                 <ResponsiveAppBar />
-            </Container>
-            <Container sx={{ height:"100vh" }}>
                 <main className="App">
                     <Outlet />
                 </main>

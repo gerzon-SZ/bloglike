@@ -11,12 +11,22 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import {selectUser} from '../users/usersSlice';
+import { selectUser } from '../users/usersSlice';
+import Container from '@mui/material/Container';
+import InputFormText from '../../components/input/inputFormText';
+import SelectFormField from '../../components/input/SelectFormField';
+
 const StyledForm = styled.form`
+
   display: flex;
   flex-direction: column;
   gap: 1rem;
 `;
+const styledSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
 
 const AddPostForm = () => {
   const userState = useSelector(selectUser);
@@ -49,60 +59,31 @@ const AddPostForm = () => {
   };
 
   return (
-    <section>
+    <Container maxWidth="sm" >
       <h2>Add a New Post</h2>
       <StyledForm onSubmit={handleSubmit(onSubmit)}>
-        <Controller
+        <InputFormText
           name="title"
+          label="Post Title"
           control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              id="outlined-basic"
-              label="Post Title"
-              variant="outlined"
-              {...field}
-            />
-          )}
+          rules={{ required: 'Title is required' }}
         />
-        <Controller
+        <SelectFormField
           name="userId"
+          label="Author"
           control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Author</InputLabel>
-              <Select
-                id="demo-simple-select"
-                labelId="demo-simple-select-label"
-                label="Author"
-                {...field}
-              >
-                {isSuccess &&
-                  users.ids.map((id) => (
-                    <MenuItem key={id} value={id}>
-                      {users.entities[id].name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          )}
+          rules={{ required: 'Author is required' }}
+          options={isSuccess && users.ids.map((id) => ({
+            value: id,
+            label: users.entities[id].name
+          }))}
         />
-        <Controller
+        <InputFormText
           name="body"
+          label="Post Content"
           control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              label="Post Content"
-              variant="outlined"
-              id="postContent"
-              name="postContent"
-              multiline
-              rows={8}
-              {...field}
-            />
-          )}
+          rules={{ required: 'Post Content is required' }}
+          multiline={true}
         />
         <Button
           type="submit"
@@ -112,7 +93,7 @@ const AddPostForm = () => {
           Save Post
         </Button>
       </StyledForm>
-    </section>
+    </Container>
   );
 };
 
