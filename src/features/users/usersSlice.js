@@ -85,6 +85,8 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(apiSlice.endpoints.login.matchFulfilled, (state, action) => {
+      console.log(action.payload, 'action.payload');
+      sessionStorage.setItem('user', JSON.stringify(action.payload));
       state.currentUser = action.payload;
     });
   },

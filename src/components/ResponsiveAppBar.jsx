@@ -54,7 +54,6 @@ function ResponsiveAppBar() {
 
   // // Navigate to login page if is not authenticated
   const user = JSON.parse(sessionStorage.getItem('user'));
-  console.log(user, 'user')
   if(!user) { // || error?.originalStatus === 401
     navigate('/signin');
   }

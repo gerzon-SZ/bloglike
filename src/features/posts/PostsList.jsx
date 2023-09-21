@@ -14,24 +14,25 @@ const PostsList = () => {
 
     let content;
     if (isLoading) {
-        content = <p>"Loading..."</p>;
-    } 
+        content = <p>Loading...</p>;
+    }
     if (isSuccess) {
         console.log(posts);
         content = posts.ids.map(postId => {
             return (
                 <Grid item xs={12} md={4} key={postId}>
+                    <h1>12345</h1>
                     <FeaturedPost key={postId} postId={postId} />
                 </Grid>
-        )
-    })
+            )
+        })
     }
     if (isError) {
         content = <p>{error}</p>;
     }
     return (
         <section>
-            <Grid container spacing = {1}>
+            <Grid container spacing={1}>
                 {content}
             </Grid>
         </section>

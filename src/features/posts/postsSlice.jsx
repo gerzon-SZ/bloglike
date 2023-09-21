@@ -25,7 +25,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                         rocket: 0,
                         coffee: 0
                     },
-                    post.id = post._id
+                        post.id = post._id
                     return post;
                 });
                 return postsAdapter.setAll(initialState, loadedPosts)
@@ -70,7 +70,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                         coffee: 0
                     },
                     id: "P".concat(nanoid()),
-                    image :'https://source.unsplash.com/random?wallpapers'
+                    image: 'https://source.unsplash.com/random?wallpapers'
                 }
             }),
             invalidatesTags: [
@@ -104,11 +104,11 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             query: ({ postId, reactions }) => ({
                 url: `posts/${postId}`,
                 method: 'PATCH',
-                 body: { reactions }
+                body: { reactions }
             }),
             async onQueryStarted({ postId, reactions }, { dispatch, queryFulfilled }) {
                 const patchResult = dispatch(
-                     extendedApiSlice.util.updateQueryData('getPosts', 'getPosts', draft => {
+                    extendedApiSlice.util.updateQueryData('getPosts', 'getPosts', draft => {
                         const post = draft.entities[postId]
                         if (post) post.reactions = reactions
                     })
