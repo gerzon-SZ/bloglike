@@ -4,7 +4,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { Controller } from 'react-hook-form';
-
 const SelectFormField = ({ name, label, control, rules, options, ...rest }) => {
   return (
     <Controller
