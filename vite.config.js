@@ -9,16 +9,16 @@ export default defineConfig({
     host: true,
     port: 80,
   },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/tests/setup.js",
-    exclude: [...configDefaults.exclude, "./src/tests/e2e/*"],
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "lcov"],
-      exclude: ["src/mocks", "tests", "src/index.jsx"],
-    },
-  },
+  // test: {
+  //   globals: true,
+  //   environment: "jsdom",
+  //   setupFiles: "./src/tests/setup.js",
+  //   exclude: [...configDefaults.exclude, "./src/tests/e2e/*"],
+  //   coverage: {
+  //     provider: "v8",
+  //     reporter: ["text", "lcov"],
+  //     exclude: ["src/mocks", "tests", "src/index.jsx"],
+  //   },
+  // },
 });
 
