@@ -14,7 +14,6 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../users/usersSlice';
 import Container from '@mui/material/Container';
 import InputFormText from '../../components/input/inputFormText';
-import SelectFormField from '../../components/input/SelectFormField';
 
 const StyledForm = styled.form`
 
@@ -68,7 +67,7 @@ const AddPostForm = () => {
           control={control}
           rules={{ required: 'Title is required' }}
         />
-        <SelectFormField
+        {/* <SelectFormField
           name="userId"
           label="Author"
           control={control}
@@ -77,7 +76,7 @@ const AddPostForm = () => {
             value: id,
             label: users.entities[id].name
           }))}
-        />
+        /> */}
         <InputFormText
           name="body"
           label="Post Content"
