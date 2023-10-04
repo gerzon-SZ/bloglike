@@ -45,7 +45,7 @@ export default function SignUp() {
       return navigate("/signin");
     }
   };
- 
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -68,13 +68,13 @@ export default function SignUp() {
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-              <Controller
-              name="firstName"
-              control={control}
-              defaultValue=""
+                <Controller
+                  name="firstName"
+                  control={control}
+                  defaultValue=""
                   render={({ field }) => (
                     <TextField
-                    {...field}
+                      {...field}
                       autoComplete="given-name"
                       name="firstName"
                       required
@@ -88,77 +88,77 @@ export default function SignUp() {
 
               </Grid>
               <Grid item xs={12} sm={6}>
-              <Controller
-              name="lastName"
-              control={control}
-              defaultValue=""
-                  render={({ field }) => (
-                <TextField
-                {...field}
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
+                <Controller
                   name="lastName"
-                  autoComplete="family-name"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      name="lastName"
+                      autoComplete="family-name"
+                    />
+                  )}
                 />
-                )}
-              />
               </Grid>
               <Grid item xs={12}>
-              <Controller
-              name="username"
-              control={control}
-              defaultValue=""
-                render={({ field }) => (
-                <TextField
-                {...field}
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
+                <Controller
                   name="username"
-                  autoComplete="username"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      required
+                      fullWidth
+                      id="username"
+                      label="Username"
+                      name="username"
+                      autoComplete="username"
+                    />
+                  )}
                 />
-                )}
-              />
               </Grid>
               <Grid item xs={12}>
-              <Controller
-              name="email"
-              control={control}
-              defaultValue=""
-                render={({ field }) => (
-                <TextField
-                {...field}
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
+                <Controller
                   name="email"
-                  autoComplete="email"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                    />
+                  )}
                 />
-                )}
-              />
-              </Grid>    
+              </Grid>
               <Grid item xs={12}>
-              <Controller
-              name="password"
-              control={control}
-              defaultValue=""
-                render={({ field }) => (
-                <TextField
-                {...field}
-                  required
-                  fullWidth
+                <Controller
                   name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="new-password"
+                    />
+                  )}
                 />
-                )}
-              />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel

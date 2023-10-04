@@ -9,7 +9,7 @@ import UsersList from "./features/users/UsersList";
 import UserPage from './features/users/UserPage';
 import Layout from "./components/Layout";
 
-import SignUp from '../pages/Signup'
+import SignUp from '../pages/SignUp'
 import SignIn from '../pages/SignIn'
 import SignInSide from '../pages/SignInSide'
 import './App.css'
